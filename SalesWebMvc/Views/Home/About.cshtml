@@ -1,7 +1,13 @@
-﻿@{
+﻿@{ //quando abre o bloco com @{ podemos utilizar codigo c#
     ViewData["Title"] = "About";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+<p>Professor @ViewData["Professor"]</p>
+
+<address>
+    <strong>
+        More information:<a href="http://educandoweb.com.br">Educandoweb.com.br</a>
+    </strong>
+</address>
