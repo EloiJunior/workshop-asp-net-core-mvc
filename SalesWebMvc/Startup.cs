@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;                    //para formatar as casas decimais
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Localization;       //para formatar as casas decimais
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +52,16 @@ namespace SalesWebMvc
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
+            var enUS = new CultureInfo("en-US");                           //criado para tratar as casas decimais
+            var localizationOptions = new RequestLocalizationOptions        //criado para tratar as casas decimais
+            {
+                DefaultRequestCulture = new RequestCulture(enUS),      //qual vai ser o local principal
+                SupportedCultures = new List<CultureInfo> { enUS },    //qual vai ser os locais possiveis
+                SupportedUICultures = new List<CultureInfo> { enUS },  //????
+            };
+
+            app.UseRequestLocalization(localizationOptions);   // o aplicativo vai usar essa localização como padrão
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
