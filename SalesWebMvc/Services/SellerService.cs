@@ -71,9 +71,17 @@ namespace SalesWebMvc.Services
         //função assincrona:
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try                                               // bloco try catch:que captura erro de integridade a nivel de serviço
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                //throw new IntegrityException(e.Message); : essa forma é para voltar o erro determinado pelo framework
+                throw new IntegrityException("Can't delete seller because he/she has sales"); //:essa é a forma de personalizar a resposta de erro
+            }
         }
 
         /*Função sincrona:
