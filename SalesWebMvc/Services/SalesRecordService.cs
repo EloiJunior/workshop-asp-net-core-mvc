@@ -71,6 +71,30 @@ namespace SalesWebMvc.Services
                 .ToListAsync(); //Assincrona: trocar .ToList por .ToListAsync
         }
 
+        //como a função do Linq GroupBy usada lá embaixo não gera lista simples e sim um IGrouping, tivemos que alterar o tipo de List
+        public async Task<List<IGrouping<Department,SalesRecord>>> FindByDateGroupingAsync(DateTime? minDate, DateTime? maxDate) 
+        {
+            var result = from obj in _context.SalesRecord select obj;
+
+            if (minDate.HasValue) 
+            {                     
+                result = result.Where(x => x.Date >= minDate.Value);
+            }
+
+            if (maxDate.HasValue)
+            {
+                result = result.Where(x => x.Date <= maxDate.Value);
+            }
+
+           
+
+            return await result 
+                .Include(x => x.Seller)
+                .Include(x => x.Seller.Department)
+                .OrderByDescending(x => x.Date)
+                .GroupBy(x => x.Seller.Department)  //essa função do Linq agrupa a lista por X, porem isso não gera uma lista normal, temos que trocar em cima tambem
+                .ToListAsync(); 
+        }
 
     }
 }
